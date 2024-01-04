@@ -38,6 +38,7 @@ namespace Popcron.Console
             SerializedProperty checkForOpenInput = serializedObject.FindProperty("checkForOpenInput");
             SerializedProperty scriptsFolder = serializedObject.FindProperty("scriptsFolder");
             SerializedProperty autoRegenerateCommandLoader = serializedObject.FindProperty("autoRegenerateCommandsFile");
+            SerializedProperty saveHistory = serializedObject.FindProperty("saveHistory");
 
             //show the colours first
             EditorGUILayout.PropertyField(userColor, new GUIContent("User input"));
@@ -103,6 +104,7 @@ namespace Popcron.Console
             }
 
 
+            EditorGUILayout.PropertyField(saveHistory);
             EditorGUILayout.PropertyField(scriptsFolder);
             EditorGUILayout.PropertyField(autoRegenerateCommandLoader);
 

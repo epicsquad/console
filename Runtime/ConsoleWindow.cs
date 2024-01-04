@@ -22,6 +22,7 @@ namespace Popcron.Console
 
         private static ConsoleWindow instance;
         private const string ConsoleControlName = "ControlField";
+        private const string ConsoleSaveHistoryKey = "ConsoleHistory(Default)";
         private static ReadOnlyCollection<string> emptyHistory;
         private static ReadOnlyCollection<string> emptyText;
         private static List<(object, LogType)> lazyWriteLineOperations = new List<(object, LogType)>();
@@ -305,6 +306,13 @@ namespace Popcron.Console
         {
             text.Clear();
             history.Clear();
+
+            if (Settings.Current.saveHistory)
+            {
+                var savedHistory = JsonHelper.FromJson<string>(PlayerPrefs.GetString(ConsoleSaveHistoryKey));
+                history.AddRange(savedHistory);
+            }
+
             textInput = null;
             isOpen = false;
             index = 0;
@@ -346,6 +354,11 @@ namespace Popcron.Console
 
         private void OnDisable()
         {
+            if (Settings.Current.saveHistory)
+            {
+                PlayerPrefs.SetString(ConsoleSaveHistoryKey, JsonHelper.ToJson(history.ToArray()));
+            }
+            
             All.Remove(this);
             Application.logMessageReceived -= HandleLog;
         }
@@ -1232,8 +1245,11 @@ namespace Popcron.Console
                 LogToFile(textInput, "Input");
                 Add(textInput, Settings.Current.UserColor);
 
-                //add to history
-                history.Add(textInput);
+                if (history[history.Count - 1] != textInput)
+                {
+                    history.Add(textInput);
+                }
+                
                 index = history.Count;
 
                 Search(null);
