@@ -138,6 +138,8 @@ namespace Popcron.Console
         public bool logToFile = true;
         public bool checkForOpenInput = true;
         public bool reportUnknownCommand = true;
+        public bool autoRegenerateCommandsFile = true;
+        public string scriptsFolder = "Scripts";
 
         [SerializeField]
         private string consoleChararacters = "`!~*^#\\Ё§";

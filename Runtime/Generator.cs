@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace Popcron.Console
 {
+    [InitializeOnLoad]
     public static class Generator
     {
         private static readonly StringBuilder contents = new StringBuilder();
@@ -60,13 +61,46 @@ namespace Popcron.Console
             return (categoriesFound, membersFound, indices);
         }
         
+        static Generator()
+        {
+            if (!Settings.Current.autoRegenerateCommandsFile) return;
+
+            AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
+        }
+
+        private static string GetFolderPathForGeneratedFile() 
+        {
+            return Path.Combine(Application.dataPath, Settings.Current.scriptsFolder, "Generated");
+        }
+
+        private static void EnsureThatFolderExists()
+        {
+            var folder = GetFolderPathForGeneratedFile();
+            if (Directory.Exists(folder)) return;
+
+            Directory.CreateDirectory(folder);
+        }
+        
+        public static string GetPathToFile()
+        {
+            string typeName = "CommandLoader";
+            string path = Path.Combine(GetFolderPathForGeneratedFile(), $"{typeName}.generated.cs");
+            return path;
+        }
+        
+        public static void GenerateScriptSource()
+        {
+            EnsureThatFolderExists();
+            GenerateScriptSource(GetPathToFile());
+        }
+        
         /// <summary>
         /// Generates the script source for a command loader and writes it to a file at this path.
         /// </summary>
-        public static void GenerateScriptSource(string path)
+        private static void GenerateScriptSource(string path)
         {
-            string typeName = Path.GetFileNameWithoutExtension(path);
-            string fileContent = GenerateScriptSource(null, typeName);
+            string typeName = Path.GetFileNameWithoutExtension(path).Replace(".generated", string.Empty);
+            string fileContent = GenerateScriptSource("Popcron.Console.Commands", typeName);
             if (!File.Exists(path) || File.ReadAllText(path) != fileContent)
             {
                 File.WriteAllText(path, fileContent);
@@ -265,7 +299,7 @@ namespace Popcron.Console
                 contents.Append(Indent);
                 contents.Append(Indent);
                 contents.Append("type = Type.GetType(\"");
-                contents.Append(category.FullName);
+                contents.Append(category.AssemblyQualifiedName);
                 contents.Append("\");");
                 contents.AppendLine();
 
@@ -316,7 +350,7 @@ namespace Popcron.Console
                     contents.Append(Indent);
                     contents.Append(Indent);
                     contents.Append("type = Type.GetType(\"");
-                    contents.Append(owningType.FullName);
+                    contents.Append(owningType.AssemblyQualifiedName);
                     contents.Append("\");");
                     contents.AppendLine();
                 }
@@ -382,6 +416,12 @@ namespace Popcron.Console
             contents.AppendLine("}");
             return contents.ToString();
         }
+        
+        private static void OnAfterAssemblyReload()
+        {
+            GenerateScriptSource();
+        }
+        
     }
 }
 #endif

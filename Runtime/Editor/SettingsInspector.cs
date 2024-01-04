@@ -36,6 +36,8 @@ namespace Popcron.Console
             SerializedProperty reportUnknownCommand = serializedObject.FindProperty("reportUnknownCommand");
             SerializedProperty formatting = serializedObject.FindProperty("formatting");
             SerializedProperty checkForOpenInput = serializedObject.FindProperty("checkForOpenInput");
+            SerializedProperty scriptsFolder = serializedObject.FindProperty("scriptsFolder");
+            SerializedProperty autoRegenerateCommandLoader = serializedObject.FindProperty("autoRegenerateCommandsFile");
 
             //show the colours first
             EditorGUILayout.PropertyField(userColor, new GUIContent("User input"));
@@ -98,6 +100,18 @@ namespace Popcron.Console
                 EditorGUILayout.PropertyField(logFilePathEditor, new GUIContent("Log path for editor"));
                 EditorGUI.indentLevel--;
                 EditorGUI.EndDisabledGroup();
+            }
+
+
+            EditorGUILayout.PropertyField(scriptsFolder);
+            EditorGUILayout.PropertyField(autoRegenerateCommandLoader);
+
+            if (!autoRegenerateCommandLoader.boolValue)
+            {
+                if (GUILayout.Button("Generate CommandLoader"))
+                {
+                    Generator.GenerateScriptSource();
+                }    
             }
 
             serializedObject.ApplyModifiedProperties();
