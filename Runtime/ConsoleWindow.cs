@@ -1245,7 +1245,7 @@ namespace Popcron.Console
                 LogToFile(textInput, "Input");
                 Add(textInput, Settings.Current.UserColor);
 
-                if (history[history.Count - 1] != textInput)
+                if (history.Count == 0 || history[history.Count - 1] != textInput)
                 {
                     history.Add(textInput);
                 }
