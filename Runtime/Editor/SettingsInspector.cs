@@ -35,6 +35,7 @@ namespace Popcron.Console
             SerializedProperty logToFile = serializedObject.FindProperty("logToFile");
             SerializedProperty reportUnknownCommand = serializedObject.FindProperty("reportUnknownCommand");
             SerializedProperty formatting = serializedObject.FindProperty("formatting");
+            SerializedProperty allowConsoleOpenOnEscapeKey = serializedObject.FindProperty("allowConsoleOpenOnEscapeKey");
             SerializedProperty checkForOpenInput = serializedObject.FindProperty("checkForOpenInput");
             SerializedProperty scriptsFolder = serializedObject.FindProperty("scriptsFolder");
             SerializedProperty autoRegenerateCommandLoader = serializedObject.FindProperty("autoRegenerateCommandsFile");
@@ -78,6 +79,8 @@ namespace Popcron.Console
             EditorGUILayout.PropertyField(scrollAmount, new GUIContent("Scroll amount"));
             EditorGUILayout.PropertyField(historySize, new GUIContent("History size"));
 
+            EditorGUILayout.PropertyField(allowConsoleOpenOnEscapeKey, new GUIContent("Allow console open/close on escape key"));
+            
             //show the keys that gon be used
             EditorGUILayout.PropertyField(checkForOpenInput, new GUIContent("Built-in open check"));
             {

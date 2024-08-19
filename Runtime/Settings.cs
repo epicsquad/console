@@ -158,6 +158,11 @@ namespace Popcron.Console
         */
 
         [SerializeField]
+        private bool allowConsoleOpenOnEscapeKey = true;
+
+        public bool AllowConsoleOpenOnEscapeKey => allowConsoleOpenOnEscapeKey;
+        
+        [SerializeField]
         private bool allowWarnings = false;
 
         [SerializeField]
@@ -280,6 +285,7 @@ namespace Popcron.Console
             }
         }
 
+        
         /// <summary>
         /// Returns true if this character is for opening the console.
         /// </summary>

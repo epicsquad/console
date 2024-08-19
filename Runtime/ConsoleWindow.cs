@@ -948,6 +948,10 @@ namespace Popcron.Console
             //try with the gui system
             if (Event.current.isKey && Event.current.type == EventType.KeyDown)
             {
+                if (Event.current.keyCode == KeyCode.Escape && Settings.Current.AllowConsoleOpenOnEscapeKey) {
+                    return true;
+                }
+                
                 if (Settings.Current.IsConsoleOpenChar(Event.current.character))
                 {
                     return true;
