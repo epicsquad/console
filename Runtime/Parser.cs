@@ -236,6 +236,8 @@ namespace Popcron.Console
                             return new NullReferenceException($"Couldn't find owner with ID {id}");
                         }
 
+                        if (owner != null && command.OwnerClass != owner.GetType()) continue;
+
                         //try to exec
                         try
                         {
